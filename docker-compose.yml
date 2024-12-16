@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  loans-db:
+    image: postgres:14-bullseye
+    container_name: loans-postgres-db
+    ports:
+      - "5109:5432"
+    environment:
+      POSTGRES_DB: loansdb
+      POSTGRES_USER: siya7
+      POSTGRES_PASSWORD: Welcome123
+    volumes:
+      - ./pgdata:/var/lib/postgresql/loans-data
+    networks:
+      - loans-db-network
+
+networks:
+  loans-db-network:
+    driver: bridge
