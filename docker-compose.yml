@@ -1,20 +1,29 @@
-version: '3.8'
-
 services:
-  loans-db:
+  db:
     image: postgres:14-bullseye
-    container_name: loans-postgres-db
+    container_name: db
     ports:
-      - "5109:5432"
+      - "5432:5432"
     environment:
       POSTGRES_DB: loansdb
       POSTGRES_USER: siya7
       POSTGRES_PASSWORD: Welcome123
     volumes:
       - ./pgdata:/var/lib/postgresql/loans-data
-    networks:
-      - loans-db-network
 
-networks:
-  loans-db-network:
-    driver: bridge
+  loans-service:
+    image: siya7/loans:1
+    build:
+      context: .
+    container_name: loans-service
+    ports:
+      - "8080:8080" # Map container port 8080 to host port 8080
+    environment:
+      - POSTGRES_USER=siya7
+      - POSTGRES_PASSWORD=Welcome123
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/loansdb
+      - SPRING_DATASOURCE_USERNAME=siya7
+      - SPRING_DATASOURCE_PASSWORD=Welcome123
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      - db
