@@ -4,9 +4,12 @@ logging:
     #org.hibernate.type: TRACE
     #org.hibernate.SQL: DEBUG
 
+server:
+  port: 8084
+
 spring:
   application:
-    name: loans-service
+    name: loans
 
   datasource:
     url: jdbc:postgresql://localhost:5432/loansdb
@@ -23,3 +26,45 @@ spring:
         format_sql: false
         show_sql: false
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+
+    rabbitmq:
+      host: "localhost"
+      port: 5672
+      username: "guest"
+      password: "guest"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  endpoint:
+    shutdown:
+      enabled: true
+
+  info:
+    env:
+      enable: true
+
+endpoints:
+  shutdown:
+    enabled: true
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
+
+info:
+  app:
+    name: "loans"
+    description: "Eazy Bank Microservices"
+    version: "1.0.0"
